@@ -33,14 +33,14 @@
 #include <EEPROM.h>
 
 // Pin defines
-#define DIGIT1_CATHODE 8
-#define DIGIT2_CATHODE 9
-#define DIGIT3_CATHODE 10
-#define IRLED 11
-#define STARTBTN 12
-#define SETBTN 13
-#define IRSENSOR_A A9
-#define IRSENSOR_B A6
+#define DIGIT1_CATHODE 22
+#define DIGIT2_CATHODE 21
+#define DIGIT3_CATHODE 19
+#define IRLED 8
+#define STARTBTN 0//PA_0
+#define SETBTN 15  //PA_15
+#define IRSENSOR_A 16
+#define IRSENSOR_B 17
 
 // EEPROM Addresses
 #define EEPROM_ADDR_PITCH 0x00
@@ -141,20 +141,36 @@ const byte segLUT[10] = {
 // the EEPROM for saved user settings
 void setup()
 {
+    pinMode(DIGIT1_CATHODE, OUTPUT);
+    pinMode(DIGIT2_CATHODE, OUTPUT);
+    pinMode(DIGIT3_CATHODE, OUTPUT);
+    pinMode(IRLED, OUTPUT);
+        
+    pinMode(PA_1, OUTPUT);
+    pinMode(PA_2, OUTPUT);
+    pinMode(PA_4, OUTPUT);
+    pinMode(PA_5, OUTPUT);
+    pinMode(PA_6, OUTPUT);
+    pinMode(PA_7, OUTPUT);
+    pinMode(PA_3, OUTPUT);
 
-    for (int i = 0; i < 12; i++)
-    {
-        pinMode(i, OUTPUT);
-        digitalWrite(i, 0);
-    }
 
-    for (int i = 12; i < 14; i++)
-    {
-        pinMode(i, INPUT_PULLUP);
-    }
-
-    pinMode(IRSENSOR_A, INPUT);
-    pinMode(IRSENSOR_B, INPUT);
+    digitalWrite(DIGIT1_CATHODE, 0);
+    digitalWrite(DIGIT2_CATHODE, 0);
+    digitalWrite(DIGIT3_CATHODE, 0);
+    digitalWrite(IRLED, 0);
+    
+    digitalWrite(PA_1, 0);
+    digitalWrite(PA_2, 0);
+    digitalWrite(PA_4, 0);
+    digitalWrite(PA_5, 0);
+    digitalWrite(PA_6, 0);
+    digitalWrite(PA_7, 0);
+    digitalWrite(PA_3, 0);
+    
+    pinMode(STARTBTN, INPUT_PULLUP);
+    pinMode(SETBTN, INPUT_PULLUP);
+    
     loadSettings();
 }
 
@@ -447,6 +463,11 @@ void translateSegments(int displayBuf)
     digit1 = segLUT[numPos[2]];
 }
 
+
+
+        
+
+
 // This method is called to "scan" the 7-seg once. In order to
 // achieve the Persistence of Vision effect necessary to make the
 // display visible, this method needs to be called as often as possible.
@@ -460,11 +481,14 @@ void translateSegments(int displayBuf)
 void updateLED()
 {
 
-    for (int i = 0; i < 7; i++)
-    {
-        digitalWrite(i, bitRead(digit1, 6-i));
-    }
-
+    digitalWrite(PA_7, bitRead(digit1, 6));
+    digitalWrite(PA_6, bitRead(digit1, 5));
+    digitalWrite(PA_5, bitRead(digit1, 4));
+    digitalWrite(PA_4, bitRead(digit1, 3));
+    digitalWrite(PA_3, bitRead(digit1, 2));
+    digitalWrite(PA_2, bitRead(digit1, 1));
+    digitalWrite(PA_1, bitRead(digit1, 0));
+  
     digitalWrite(DIGIT1_CATHODE, 1);
     if (deviceMode == 1)
     {
@@ -476,10 +500,13 @@ void updateLED()
     }
     digitalWrite(DIGIT1_CATHODE, 0);
 
-    for (int i = 0; i < 7; i++)
-    {
-        digitalWrite(i, bitRead(digit2, 6-i));
-    }
+    digitalWrite(PA_7, bitRead(digit2, 6));
+    digitalWrite(PA_6, bitRead(digit2, 5));
+    digitalWrite(PA_5, bitRead(digit2, 4));
+    digitalWrite(PA_4, bitRead(digit2, 3));
+    digitalWrite(PA_3, bitRead(digit2, 2));
+    digitalWrite(PA_2, bitRead(digit2, 1));
+    digitalWrite(PA_1, bitRead(digit2, 0));
 
     digitalWrite(DIGIT2_CATHODE, 1);
     if (deviceMode == 1)
@@ -492,10 +519,13 @@ void updateLED()
     }
     digitalWrite(DIGIT2_CATHODE, 0);
 
-    for (int i = 0; i < 7; i++)
-    {
-        digitalWrite(i, bitRead(digit3, 6-i));
-    }
+    digitalWrite(PA_7, bitRead(digit3, 6));
+    digitalWrite(PA_6, bitRead(digit3, 5));
+    digitalWrite(PA_5, bitRead(digit3, 4));
+    digitalWrite(PA_4, bitRead(digit3, 3));
+    digitalWrite(PA_3, bitRead(digit3, 2));
+    digitalWrite(PA_2, bitRead(digit3, 1));
+    digitalWrite(PA_1, bitRead(digit3, 0));
 
     digitalWrite(DIGIT3_CATHODE, 1);
     if (deviceMode == 1)
